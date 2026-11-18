@@ -1,104 +1,106 @@
 
-<!doctype html>
+<!DOCTYPE html>
 <html lang="tr">
 <head>
-<meta charset="utf-8">
+<meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">
-<title>ÇAKIR LIVE 3D — Sinematik Kortej</title>
+<title>ÇAKIR LIVE 3D - V3</title>
 <style>
-:root{color-scheme:dark}
 *{box-sizing:border-box}
-html,body{margin:0;width:100%;height:100%;overflow:hidden;background:#111713;font-family:system-ui,Arial;color:#f3ead8}
+html,body{margin:0;width:100%;height:100%;overflow:hidden;background:#111713;color:#f3ead8;font-family:Arial,sans-serif}
 #stage{position:fixed;inset:0}
 canvas{display:block;width:100%;height:100%}
-.top{position:fixed;top:env(safe-area-inset-top,8px);left:10px;right:10px;display:flex;justify-content:space-between;align-items:flex-start;gap:8px;pointer-events:none}
-.panel{background:linear-gradient(135deg,rgba(8,15,12,.92),rgba(24,27,22,.78));border:1px solid rgba(195,160,99,.7);border-radius:10px;padding:9px 12px;box-shadow:0 5px 20px #0007;backdrop-filter:blur(7px)}
-.brand{font-size:12px;letter-spacing:2px;font-weight:800;color:#e3c68f}
-.sub{font-size:10px;color:#c7c1b4;margin-top:3px}
-.status{font-size:10px;color:#d8c69f;text-align:right}
-.bottom{position:fixed;left:0;right:0;bottom:calc(10px + env(safe-area-inset-bottom,0px));display:flex;justify-content:center;gap:7px;padding:0 8px;flex-wrap:wrap}
-button{border:1px solid #b99a62;background:linear-gradient(#29271f,#121713);color:#f3dfb5;border-radius:9px;padding:10px 12px;font-size:11px;font-weight:750;letter-spacing:.3px;box-shadow:0 4px 12px #0008}
-button:active{transform:translateY(1px);background:#51432b}
-.note{position:fixed;left:10px;bottom:calc(58px + env(safe-area-inset-bottom,0px));font-size:9px;color:#c9c2b5;background:#0b100dcc;padding:6px 8px;border-radius:6px;pointer-events:none}
-#loading{position:fixed;inset:0;display:grid;place-items:center;background:#111713;color:#e8d5ad;z-index:5;font-size:13px;letter-spacing:1px}
+.top{position:fixed;top:8px;left:9px;right:9px;display:flex;justify-content:space-between;gap:7px;pointer-events:none}
+.panel{background:#101711df;border:1px solid #b99a62;border-radius:9px;padding:9px 11px;box-shadow:0 4px 15px #0008}
+.brand{font-size:12px;letter-spacing:2px;font-weight:900;color:#e3c68f}
+.sub,.status{font-size:9px;color:#d1c7b4;margin-top:4px}
+.status{text-align:right;line-height:1.5}
+.bottom{position:fixed;bottom:calc(10px + env(safe-area-inset-bottom));left:0;right:0;display:flex;justify-content:center;gap:6px;flex-wrap:wrap;padding:0 6px}
+button{border:1px solid #b99a62;background:linear-gradient(#302c22,#111713);color:#f3dfb5;border-radius:8px;padding:11px 12px;font-size:10px;font-weight:800}
+button:active{background:#655032}
+.note{position:fixed;bottom:65px;left:9px;font-size:9px;background:#101711dc;padding:6px 8px;border-radius:5px;color:#d4c8b1}
+#loading{position:fixed;inset:0;display:grid;place-items:center;background:#111713;z-index:5;color:#e3c68f;font-size:13px}
 </style>
-<script type="importmap">{"imports":{"three":"https://cdn.jsdelivr.net/npm/three@0.160.0/build/three.module.js"}}</script>
+<script type="importmap">
+{"imports":{"three":"https://cdn.jsdelivr.net/npm/three@0.160.0/build/three.module.js"}}
+</script>
 </head>
 <body>
-<div id="loading">ÇAKIR LIVE 3D · SAHNE HAZIRLANIYOR</div>
+<div id="loading">ÇAKIR LIVE 3D · V3 HAZIRLANIYOR</div>
 <div id="stage"></div>
 <div class="top">
- <div class="panel"><div class="brand">ÇAKIR LIVE 3D</div><div class="sub">SİNEMATİK CENAZE KORTEJİ · SAHNE V2</div></div>
- <div class="panel status">MEZARLIK GİRİŞİ<br>AKŞAMÜSTÜ · TEST SAHNESİ</div>
+ <div class="panel">
+  <div class="brand">ÇAKIR LIVE 3D</div>
+  <div class="sub">SİNEMATİK KORTEJ · SAHNE V3</div>
+ </div>
+ <div class="panel status">MEZARLIK GİRİŞİ<br>GELİŞMİŞ ANİMASYON TESTİ</div>
 </div>
-<div class="note">Görsel prototip · TikTok bağlantısı henüz yok</div>
+<div class="note">V3 · Yumuşak kamera ve eklemli yürüyüş · TikTok bağlantısı yok</div>
 <div class="bottom">
  <button id="front">ÖNDEN TAKİP</button>
  <button id="side">YAN PLAN</button>
  <button id="wide">GENİŞ PLAN</button>
  <button id="pause">DURAKLAT</button>
 </div>
+
 <script type="module">
 import * as THREE from 'three';
 
 const host=document.querySelector('#stage');
 const scene=new THREE.Scene();
-scene.background=new THREE.Color(0x646b68);
-scene.fog=new THREE.FogExp2(0x646b68,.012);
+scene.background=new THREE.Color(0x626b66);
+scene.fog=new THREE.FogExp2(0x626b66,.011);
 
-const camera=new THREE.PerspectiveCamera(38,innerWidth/innerHeight,.1,180);
+const camera=new THREE.PerspectiveCamera(39,innerWidth/innerHeight,.1,180);
 const renderer=new THREE.WebGLRenderer({antialias:true,powerPreference:'high-performance'});
-renderer.setPixelRatio(Math.min(devicePixelRatio,1.65));
+renderer.setPixelRatio(Math.min(devicePixelRatio,1.5));
 renderer.setSize(innerWidth,innerHeight);
 renderer.shadowMap.enabled=true;
 renderer.shadowMap.type=THREE.PCFSoftShadowMap;
 renderer.outputColorSpace=THREE.SRGBColorSpace;
 renderer.toneMapping=THREE.ACESFilmicToneMapping;
-renderer.toneMappingExposure=1.12;
+renderer.toneMappingExposure=1.1;
 host.appendChild(renderer.domElement);
 
-scene.add(new THREE.HemisphereLight(0xcbd4d0,0x252b26,1.65));
-
-const key=new THREE.DirectionalLight(0xffd5a0,2.6);
-key.position.set(-13,18,10);
-key.castShadow=true;
-key.shadow.mapSize.set(1536,1536);
-key.shadow.camera.left=-24;
-key.shadow.camera.right=24;
-key.shadow.camera.top=24;
-key.shadow.camera.bottom=-24;
-key.shadow.bias=-.00025;
-scene.add(key);
-
-const fill=new THREE.DirectionalLight(0x9baeb8,.65);
+scene.add(new THREE.HemisphereLight(0xd5ddd7,0x252b25,1.7));
+const sun=new THREE.DirectionalLight(0xffd6a2,2.5);
+sun.position.set(-12,18,10);
+sun.castShadow=true;
+sun.shadow.mapSize.set(1024,1024);
+sun.shadow.camera.left=-22;
+sun.shadow.camera.right=22;
+sun.shadow.camera.top=22;
+sun.shadow.camera.bottom=-22;
+scene.add(sun);
+const fill=new THREE.DirectionalLight(0xa6b8c3,.7);
 fill.position.set(10,8,-12);
 scene.add(fill);
 
-const mat=(color,roughness=.78,metalness=0)=>
+const material=(color,roughness=.8,metalness=0)=>
  new THREE.MeshStandardMaterial({color,roughness,metalness});
 
 const M={
- earth:mat(0x30372f),
- grass:mat(0x465044),
- path:mat(0x4b4b43),
- stone:mat(0x77776f,.92),
- black:mat(0x111419,.7),
- shirt:mat(0xd6d0c4),
- tie:mat(0x29201c),
- skin:mat(0x98715c),
- skin2:mat(0xb08067),
- hair:mat(0x171411),
- shoe:mat(0x090b0d,.45),
- velvet:mat(0x103b2b,.42),
- gold:mat(0xb58b45,.28,.72),
- flower1:mat(0x8e2635),
- flower2:mat(0xe5d9c5),
- leaf:mat(0x35523b),
- wood:mat(0x49382b)
+ earth:material(0x30372f),
+ grass:material(0x465044),
+ path:material(0x4b4b43),
+ stone:material(0x77776f),
+ black:material(0x111419,.72),
+ shirt:material(0xd6d0c4),
+ tie:material(0x29201c),
+ skin:material(0x98715c),
+ skin2:material(0xb08067),
+ hair:material(0x171411),
+ shoe:material(0x090b0d,.45),
+ velvet:material(0x103b2b,.42),
+ gold:material(0xb58b45,.28,.65),
+ flower1:material(0x8e2635),
+ flower2:material(0xe5d9c5),
+ leaf:material(0x35523b),
+ wood:material(0x49382b)
 };
 
-function mesh(geo,material,parent,x=0,y=0,z=0){
- const o=new THREE.Mesh(geo,material);
+function makeMesh(geo,mat,parent,x=0,y=0,z=0){
+ const o=new THREE.Mesh(geo,mat);
  o.position.set(x,y,z);
  o.castShadow=true;
  o.receiveShadow=true;
@@ -106,487 +108,338 @@ function mesh(geo,material,parent,x=0,y=0,z=0){
  return o;
 }
 
-// ZEMİN VE YÜRÜYÜŞ YOLU
-const floor=mesh(new THREE.PlaneGeometry(150,150),M.earth,scene,0,-.12,0);
+const floor=makeMesh(new THREE.PlaneGeometry(150,150),M.earth,scene,0,-.12,0);
 floor.rotation.x=-Math.PI/2;
-
-const grass=mesh(new THREE.PlaneGeometry(18,115),M.grass,scene,0,-.105,-23);
+const grass=makeMesh(new THREE.PlaneGeometry(18,115),M.grass,scene,0,-.105,-23);
 grass.rotation.x=-Math.PI/2;
-
-const road=mesh(new THREE.PlaneGeometry(7.8,115),M.path,scene,0,-.07,-24);
+const road=makeMesh(new THREE.PlaneGeometry(7.8,115),M.path,scene,0,-.07,-24);
 road.rotation.x=-Math.PI/2;
 
 for(const x of [-4.05,4.05]){
- mesh(new THREE.BoxGeometry(.18,.18,115),M.stone,scene,x,-.01,-24);
+ makeMesh(new THREE.BoxGeometry(.18,.18,115),M.stone,scene,x,-.01,-24);
 }
 
-for(let i=0;i<42;i++){
- const z=-75+i*1.8;
- const peb=mesh(
-  new THREE.SphereGeometry(.045+Math.random()*.035,6,5),
-  mat(0x77776b),
-  scene,
-  (Math.random()-.5)*7,-.005,z
- );
- peb.scale.set(1,.22,1.8);
-}
-
-// MEZARLIK KAPISI
+// Mezarlık kapısı
 const gate=new THREE.Group();
 gate.position.set(0,0,10);
 scene.add(gate);
-
 for(const x of [-5.1,5.1]){
- mesh(new THREE.BoxGeometry(.85,4.7,.9),M.stone,gate,x,2.35,0);
- mesh(new THREE.BoxGeometry(1.15,.28,1.2),M.gold,gate,x,4.82,0);
- mesh(new THREE.BoxGeometry(.95,.22,1.05),M.stone,gate,x,5.05,0);
+ makeMesh(new THREE.BoxGeometry(.85,4.7,.9),M.stone,gate,x,2.35,0);
+ makeMesh(new THREE.BoxGeometry(1.15,.28,1.2),M.gold,gate,x,4.82,0);
 }
-
-mesh(new THREE.BoxGeometry(10.2,.48,.55),M.stone,gate,0,4.65,0);
-
+makeMesh(new THREE.BoxGeometry(10.2,.48,.55),M.stone,gate,0,4.65,0);
 for(let x=-4.55;x<=4.56;x+=.52){
- mesh(new THREE.CylinderGeometry(.035,.035,3.7,8),M.black,gate,x,2.55,0);
+ makeMesh(new THREE.CylinderGeometry(.035,.035,3.7,8),M.black,gate,x,2.55,0);
 }
+makeMesh(new THREE.BoxGeometry(3.5,.55,.18),M.black,gate,0,5.25,.08);
+makeMesh(new THREE.BoxGeometry(2.4,.055,.03),M.gold,gate,0,5.25,.19);
 
-for(const x of [-3.7,3.7]){
- const fin=mesh(new THREE.ConeGeometry(.13,.32,4),M.gold,gate,x,4.55,0);
- fin.rotation.y=Math.PI/4;
-}
-
-mesh(new THREE.BoxGeometry(3.5,.55,.18),mat(0x202820),gate,0,5.25,.08);
-mesh(new THREE.BoxGeometry(2.4,.055,.03),M.gold,gate,0,5.25,.19);
-
-// MEZARLIK DUVARLARI
+// Duvarlar
 for(const side of [-1,1]){
- mesh(new THREE.BoxGeometry(.35,1.45,90),M.stone,scene,side*10,.72,-28);
+ makeMesh(new THREE.BoxGeometry(.35,1.45,90),M.stone,scene,side*10,.72,-28);
  for(let z=-70;z<15;z+=3.5){
-  mesh(new THREE.BoxGeometry(.48,.35,.5),M.stone,scene,side*10,1.55,z);
+  makeMesh(new THREE.BoxGeometry(.48,.35,.5),M.stone,scene,side*10,1.55,z);
  }
 }
 
-// AĞAÇLAR
+// Ağaçlar
 function tree(x,z,s){
  const g=new THREE.Group();
  g.position.set(x,0,z);
  scene.add(g);
-
- mesh(new THREE.CylinderGeometry(.16*s,.28*s,3.2*s,10),M.wood,g,0,1.6*s,0);
-
- for(let i=0;i<8;i++){
+ makeMesh(new THREE.CylinderGeometry(.16*s,.28*s,3.2*s,10),M.wood,g,0,1.6*s,0);
+ for(let i=0;i<9;i++){
   const a=i*2.399;
   const y=2.7*s+(i%3)*.58*s;
   const r=(.65+Math.random()*.38)*s;
-
-  const crown=mesh(
-   new THREE.IcosahedronGeometry(r,1),
-   mat(i%2?0x293d31:0x35483a),
-   g,
-   Math.cos(a)*.45*s,
-   y,
-   Math.sin(a)*.4*s
-  );
-
+  const crown=makeMesh(new THREE.IcosahedronGeometry(r,1),
+   material(i%2?0x293d31:0x35483a),g,
+   Math.cos(a)*.45*s,y,Math.sin(a)*.4*s);
   crown.scale.set(1,1.25,.95);
  }
 }
-
 for(let z=-72;z<13;z+=8){
  tree(-7.5,z,1.2);
  tree(7.5,z+3,1.12);
 }
 
-// MEZAR TAŞLARI
+// Mezar taşları
 for(let i=0;i<32;i++){
  const side=i%2?-1:1;
- const z=-67+Math.floor(i/2)*4.2+(Math.random()-.5)*1.1;
+ const z=-67+Math.floor(i/2)*4.2+(Math.random()-.5);
  const x=side*(5.2+Math.random()*3.6);
-
  const g=new THREE.Group();
  g.position.set(x,0,z);
  scene.add(g);
-
- mesh(new THREE.BoxGeometry(1.05,.16,1.25),M.stone,g,0,.08,0);
-
- const marker=mesh(new THREE.BoxGeometry(.65,.92,.2),M.stone,g,0,.58,0);
- marker.rotation.x=-.06;
-
- mesh(new THREE.BoxGeometry(.78,.12,.27),M.stone,g,0,1.06,0);
-
+ makeMesh(new THREE.BoxGeometry(1.05,.16,1.25),M.stone,g,0,.08,0);
+ makeMesh(new THREE.BoxGeometry(.65,.92,.2),M.stone,g,0,.58,0);
+ makeMesh(new THREE.BoxGeometry(.78,.12,.27),M.stone,g,0,1.06,0);
  for(let f=0;f<4;f++){
-  const fl=mesh(
-   new THREE.SphereGeometry(.09,8,7),
-   f%2?M.flower1:M.flower2,
-   g,
-   (Math.random()-.5)*.6,
-   .22,
-   (Math.random()-.5)*.7
-  );
-  fl.scale.y=.5;
+  makeMesh(new THREE.SphereGeometry(.09,8,7),
+   f%2?M.flower1:M.flower2,g,
+   (Math.random()-.5)*.6,.22,(Math.random()-.5)*.7);
  }
 }
 
-// İNSAN KARAKTER MODELİ
+// İnsan modeli: kalça, diz, ayak, omuz ve dirsek eklemleri
 function person(opts={}){
- const scale=opts.scale||1;
+ const s=opts.scale||1;
  const tone=opts.tone||M.skin;
  const jacket=opts.jacket||M.black;
-
  const g=new THREE.Group();
- g.userData.phase=Math.random()*6.28;
+ const phase=Math.random()*Math.PI*2;
 
  const torso=new THREE.Group();
- torso.position.y=1.12*scale;
+ torso.position.y=1.12*s;
  g.add(torso);
 
- mesh(new THREE.CapsuleGeometry(.31*scale,.57*scale,5,10),jacket,torso,0,.13*scale,0);
-
- mesh(new THREE.BoxGeometry(.32*scale,.48*scale,.035*scale),M.shirt,torso,0,.16*scale,.286*scale);
-
- const tie=mesh(new THREE.ConeGeometry(.065*scale,.48*scale,4),M.tie,torso,0,.13*scale,.32*scale);
+ makeMesh(new THREE.CapsuleGeometry(.31*s,.57*s,5,10),jacket,torso,0,.13*s,0);
+ makeMesh(new THREE.BoxGeometry(.32*s,.48*s,.035*s),M.shirt,torso,0,.16*s,.286*s);
+ const tie=makeMesh(new THREE.ConeGeometry(.065*s,.48*s,4),M.tie,torso,0,.13*s,.32*s);
  tie.rotation.x=Math.PI;
 
- // CEKET YAKALARI
- for(const s of [-1,1]){
-  const lap=mesh(new THREE.BufferGeometry(),jacket,torso,s*.105*scale,.29*scale,.315*scale);
-  const v=new Float32Array([
-   0,.15,0,
-   s*.12,-.04,0,
-   s*.03,-.12,.015
-  ]);
-  lap.geometry.setAttribute('position',new THREE.BufferAttribute(v,3));
-  lap.geometry.computeVertexNormals();
-  lap.material.side=THREE.DoubleSide;
+ for(const side of [-1,1]){
+  const lapel=makeMesh(new THREE.BoxGeometry(.11*s,.34*s,.035*s),jacket,torso,side*.11*s,.27*s,.31*s);
+  lapel.rotation.z=side*.25;
  }
 
- mesh(new THREE.CylinderGeometry(.09*scale,.105*scale,.18*scale,12),tone,g,0,1.57*scale,0);
+ makeMesh(new THREE.CylinderGeometry(.09*s,.105*s,.18*s,12),tone,g,0,1.57*s,0);
 
- // KAFA VE SAÇ
  const head=new THREE.Group();
- head.position.set(0,1.87*scale,0);
+ head.position.set(0,1.87*s,0);
  g.add(head);
+ makeMesh(new THREE.SphereGeometry(.235*s,20,16),tone,head);
+ makeMesh(new THREE.SphereGeometry(.24*s,20,12,0,Math.PI*2,0,Math.PI*.48),M.hair,head,0,.085*s,-.005*s);
 
- mesh(new THREE.SphereGeometry(.235*scale,24,20),tone,head,0,0,0);
+ for(const side of [-1,1]){
+  makeMesh(new THREE.SphereGeometry(.055*s,10,8),tone,head,side*.23*s,-.015*s,0);
+  makeMesh(new THREE.BoxGeometry(.19*s,.055*s,.055*s),M.black,head,side*.095*s,.035*s,.205*s);
+ }
+ makeMesh(new THREE.BoxGeometry(.38*s,.045*s,.06*s),M.black,head,0,.035*s,.205*s);
 
- mesh(
-  new THREE.SphereGeometry(.24*scale,20,12,0,Math.PI*2,0,Math.PI*.48),
-  M.hair,head,0,.085*scale,-.005*scale
- );
+ // Kollar: üst kol, dirsek, ön kol ve el
+ const arms=[];
+ for(const side of [-1,1]){
+  const shoulder=new THREE.Group();
+  shoulder.position.set(side*.34*s,1.38*s,0);
+  g.add(shoulder);
 
- // KULAKLAR VE GÖZLÜK
- for(const s of [-1,1]){
-  mesh(new THREE.SphereGeometry(.055*scale,10,8),tone,head,s*.23*scale,-.015*scale,0);
+  makeMesh(new THREE.CapsuleGeometry(.105*s,.35*s,4,8),jacket,shoulder,0,-.22*s,0);
 
-  mesh(
-   new THREE.BoxGeometry(.19*scale,.055*scale,.055*scale),
-   mat(0x080c10,.28,.3),
-   head,
-   s*.095*scale,.035*scale,.205*scale
-  );
+  const elbow=new THREE.Group();
+  elbow.position.set(side*.025*s,-.43*s,.015*s);
+  shoulder.add(elbow);
+
+  makeMesh(new THREE.CapsuleGeometry(.083*s,.31*s,4,8),jacket,elbow,0,-.19*s,.035*s);
+  makeMesh(new THREE.SphereGeometry(.085*s,10,8),tone,elbow,0,-.39*s,.07*s);
+
+  arms.push({shoulder,elbow,side});
  }
 
- mesh(
-  new THREE.BoxGeometry(.38*scale,.045*scale,.06*scale),
-  mat(0x080c10,.25,.3),
-  head,0,.035*scale,.205*scale
- );
-
- // KOLLAR VE ELLER
- const arms=[],hands=[];
-
- for(const s of [-1,1]){
-  const arm=new THREE.Group();
-  arm.position.set(s*.34*scale,1.38*scale,0);
-  g.add(arm);
-
-  const upper=mesh(
-   new THREE.CapsuleGeometry(.105*scale,.37*scale,4,8),
-   jacket,arm,s*.055*scale,-.23*scale,.015*scale
-  );
-  upper.rotation.z=-s*.12;
-
-  const fore=mesh(
-   new THREE.CapsuleGeometry(.085*scale,.34*scale,4,8),
-   jacket,arm,s*.10*scale,-.55*scale,.13*scale
-  );
-  fore.rotation.z=s*.22;
-
-  const hand=mesh(
-   new THREE.SphereGeometry(.095*scale,12,10),
-   tone,arm,s*.12*scale,-.78*scale,.19*scale
-  );
-
-  arms.push(arm);
-  hands.push(hand);
- }
-
- // BACAKLAR VE AYAKKABILAR
+ // Bacaklar: kalça, diz, baldır ve ayak ayrı parçalar
  const legs=[];
+ for(const side of [-1,1]){
+  const hip=new THREE.Group();
+  hip.position.set(side*.16*s,.78*s,0);
+  g.add(hip);
 
- for(const s of [-1,1]){
-  const leg=new THREE.Group();
-  leg.position.set(s*.16*scale,.77*scale,0);
-  g.add(leg);
+  makeMesh(new THREE.CapsuleGeometry(.115*s,.34*s,4,8),jacket,hip,0,-.22*s,0);
 
-  mesh(
-   new THREE.CapsuleGeometry(.115*scale,.52*scale,4,8),
-   jacket,leg,0,-.25*scale,0
-  );
+  const knee=new THREE.Group();
+  knee.position.set(0,-.43*s,0);
+  hip.add(knee);
 
-  mesh(
-   new THREE.CylinderGeometry(.09*scale,.105*scale,.12*scale,10),
-   M.shoe,leg,0,-.56*scale,.02*scale
-  );
+  makeMesh(new THREE.CapsuleGeometry(.09*s,.34*s,4,8),jacket,knee,0,-.19*s,0);
 
-  mesh(
-   new THREE.BoxGeometry(.19*scale,.11*scale,.34*scale),
-   M.shoe,leg,0,-.61*scale,.1*scale
-  );
+  const foot=new THREE.Group();
+  foot.position.set(0,-.38*s,.04*s);
+  knee.add(foot);
+  makeMesh(new THREE.BoxGeometry(.19*s,.11*s,.34*s),M.shoe,foot,0,-.025*s,.09*s);
 
-  legs.push(leg);
+  legs.push({hip,knee,foot,side});
  }
 
- g.userData.legs=legs;
- g.userData.arms=arms;
- g.userData.torso=torso;
-
+ g.userData={phase,legs,arms,torso,head};
  return g;
 }
 
-// KORTEJ GRUBU
+// Kortej
 const cortege=new THREE.Group();
 scene.add(cortege);
 
 const coffin=new THREE.Group();
 cortege.add(coffin);
 
-// YEŞİL KADİFE TABUT
-mesh(new THREE.BoxGeometry(1.75,.62,3.35),M.velvet,coffin,0,2.05,0);
+makeMesh(new THREE.BoxGeometry(1.75,.62,3.35),M.velvet,coffin,0,2.05,0);
+makeMesh(new THREE.BoxGeometry(1.82,.27,3.42),M.velvet,coffin,0,2.48,0);
+makeMesh(new THREE.BoxGeometry(1.3,.035,2.72),material(0x174b36,.4),coffin,0,2.635,0);
 
-mesh(new THREE.BoxGeometry(1.82,.27,3.42),M.velvet,coffin,0,2.48,0);
-
-mesh(new THREE.BoxGeometry(1.3,.035,2.72),mat(0x174b36,.4),coffin,0,2.635,0);
-
-// ALTIN ŞERİTLER VE TAŞIMA SIRIKLARI
 for(const x of [-.89,.89]){
- mesh(new THREE.BoxGeometry(.075,.12,3.5),M.gold,coffin,x,2.12,0);
-
+ makeMesh(new THREE.BoxGeometry(.075,.12,3.5),M.gold,coffin,x,2.12,0);
  for(const z of [-1.25,-.65,0,.65,1.25]){
-  mesh(new THREE.SphereGeometry(.075,10,8),M.gold,coffin,x,2.5,z);
+  makeMesh(new THREE.SphereGeometry(.075,10,8),M.gold,coffin,x,2.5,z);
  }
-
- const pole=mesh(
-  new THREE.CylinderGeometry(.055,.055,4.8,14),
-  M.gold,coffin,x*1.22,1.78,0
- );
+ const pole=makeMesh(new THREE.CylinderGeometry(.055,.055,4.8,14),M.gold,coffin,x*1.22,1.78,0);
  pole.rotation.x=Math.PI/2;
-
- for(const z of [-2.15,2.15]){
-  const grip=mesh(
-   new THREE.CylinderGeometry(.075,.075,.5,12),
-   mat(0x493624),
-   coffin,x*1.22,1.78,z
-  );
-  grip.rotation.x=Math.PI/2;
- }
 }
 
-// TABUT ÜSTÜ ALTIN ARMASI
-const emblem=mesh(
- new THREE.CylinderGeometry(.22,.22,.045,32),
- M.gold,coffin,0,2.67,-.15
-);
-emblem.rotation.x=Math.PI/2;
+makeMesh(new THREE.CylinderGeometry(.22,.22,.045,32),M.gold,coffin,0,2.67,-.15);
+makeMesh(new THREE.BoxGeometry(.055,.02,.34),M.gold,coffin,0,2.7,-.15);
+makeMesh(new THREE.BoxGeometry(.24,.02,.055),M.gold,coffin,0,2.7,-.15);
 
-mesh(new THREE.BoxGeometry(.055,.02,.34),M.gold,coffin,0,2.7,-.15);
-mesh(new THREE.BoxGeometry(.24,.02,.055),M.gold,coffin,0,2.7,-.15);
-
-// TABUT ÇİÇEKLERİ
 for(let i=0;i<44;i++){
  const a=Math.random()*Math.PI*2;
  const r=.18+Math.random()*.62;
-
- const f=mesh(
-  new THREE.SphereGeometry(.095+Math.random()*.035,10,8),
-  i%4===0?M.flower2:M.flower1,
-  coffin,
-  Math.cos(a)*r,
-  2.72,
-  Math.sin(a)*r*1.45
- );
-
+ const f=makeMesh(new THREE.SphereGeometry(.095,10,8),
+  i%4===0?M.flower2:M.flower1,coffin,
+  Math.cos(a)*r,2.72,Math.sin(a)*r*1.45);
  f.scale.set(1,.65,1);
 }
-
 for(let i=0;i<28;i++){
- const leaf=mesh(
-  new THREE.SphereGeometry(.1,8,6),
-  M.leaf,
-  coffin,
-  (Math.random()-.5)*1.25,
-  2.69,
-  (Math.random()-.5)*2.6
- );
-
+ const leaf=makeMesh(new THREE.SphereGeometry(.1,8,6),M.leaf,coffin,
+  (Math.random()-.5)*1.25,2.69,(Math.random()-.5)*2.6);
  leaf.scale.set(.45,.16,1.8);
  leaf.rotation.y=Math.random()*Math.PI;
 }
 
-// DÖRT TABUT TAŞIYICISI
+// Dört tabut taşıyıcısı
 const carriers=[];
 const carrierPositions=[
- [-1.62,1.0],
- [1.62,1.0],
- [-1.62,-1.0],
- [1.62,-1.0]
+ [-1.62,1.0],[1.62,1.0],
+ [-1.62,-1.0],[1.62,-1.0]
 ];
 
 carrierPositions.forEach((p,i)=>{
  const c=person({tone:i===1?M.skin2:M.skin});
  c.position.set(p[0],0,p[1]);
  c.rotation.y=Math.PI;
-
- mesh(
-  new THREE.CylinderGeometry(.045,.045,.68,10),
-  M.black,c,p[0]<0?-.02:.02,1.78,.02
- ).rotation.z=Math.PI/2;
-
  cortege.add(c);
  carriers.push(c);
 });
 
-// ARKA PLAN KALABALIĞI
+// Arka kalabalık
 const crowd=[];
-
 for(let i=0;i<30;i++){
  const side=i%2?-1:1;
  const row=Math.floor(i/2);
-
- const c=person({
-  scale:.88,
-  tone:i%3===0?M.skin2:M.skin
- });
-
+ const c=person({scale:.88,tone:i%3===0?M.skin2:M.skin});
  c.position.set(side*(3.1+(i%4)*.42),0,-3.2-row*1.05);
  c.rotation.y=Math.PI;
-
  cortege.add(c);
  crowd.push(c);
 }
 
-// YOL KENARI FENERLER
+// Fenerler
 for(const side of [-1,1]){
  for(let z=-46;z<5;z+=12){
-  mesh(
-   new THREE.CylinderGeometry(.055,.08,2.2,10),
-   M.black,scene,side*4.9,1.1,z
-  );
-
-  mesh(
-   new THREE.BoxGeometry(.38,.42,.38),
-   mat(0xd4ad68,.25,.25),
-   scene,side*4.9,2.3,z
-  );
-
-  const glow=new THREE.PointLight(0xffc77b,.55,7);
-  glow.position.set(side*4.9,2.25,z);
-  scene.add(glow);
+  makeMesh(new THREE.CylinderGeometry(.055,.08,2.2,10),M.black,scene,side*4.9,1.1,z);
+  makeMesh(new THREE.BoxGeometry(.38,.42,.38),M.gold,scene,side*4.9,2.3,z);
+  const light=new THREE.PointLight(0xffc77b,.55,7);
+  light.position.set(side*4.9,2.25,z);
+  scene.add(light);
  }
 }
 
-// KAMERA SİSTEMİ
+// Kamera sistemi: hedef konumlar yumuşak geçişle takip edilir
 let cameraMode='front';
 let paused=false;
 let elapsed=0;
 
-const target=new THREE.Vector3(0,1.55,0);
+const desiredPosition=new THREE.Vector3();
+const desiredTarget=new THREE.Vector3();
+const lookTarget=new THREE.Vector3();
 
-function setCamera(){
+function cameraSetup(){
+ const z=cortege.position.z;
  if(cameraMode==='front'){
-  camera.position.set(5.2,4.4,9.7);
-  target.set(0,1.55,-.4);
+  desiredPosition.set(5.2,4.4,z+9.7);
+  desiredTarget.set(0,1.55,z-.5);
  }
-
  if(cameraMode==='side'){
-  camera.position.set(9.2,3.7,1.5);
-  target.set(0,1.5,-.2);
+  desiredPosition.set(9.2,3.7,z+1.5);
+  desiredTarget.set(0,1.5,z-.4);
  }
-
  if(cameraMode==='wide'){
-  camera.position.set(10.5,7.3,13.8);
-  target.set(0,1.2,-1.8);
+  desiredPosition.set(10.5,7.3,z+13.8);
+  desiredTarget.set(0,1.5,z-1.8);
  }
-
- camera.lookAt(target);
 }
 
-setCamera();
+cameraSetup();
+camera.position.copy(desiredPosition);
+lookTarget.copy(desiredTarget);
+camera.lookAt(lookTarget);
 
-document.querySelector('#front').onclick=()=>{
- cameraMode='front';
- setCamera();
-};
-
-document.querySelector('#side').onclick=()=>{
- cameraMode='side';
- setCamera();
-};
-
-document.querySelector('#wide').onclick=()=>{
- cameraMode='wide';
- setCamera();
-};
-
+document.querySelector('#front').onclick=()=>cameraMode='front';
+document.querySelector('#side').onclick=()=>cameraMode='side';
+document.querySelector('#wide').onclick=()=>cameraMode='wide';
 document.querySelector('#pause').onclick=e=>{
  paused=!paused;
  e.currentTarget.textContent=paused?'DEVAM':'DURAKLAT';
 };
 
-// ANİMASYON DÖNGÜSÜ
+function animatePerson(p,t,amplitude=1){
+ const d=p.userData;
+ const phase=t*4.1+d.phase;
+ const swing=Math.sin(phase)*.48*amplitude;
+ const opposite=Math.sin(phase+Math.PI)*.48*amplitude;
+
+ d.legs.forEach((leg,i)=>{
+  const a=i===0?swing:opposite;
+  leg.hip.rotation.x=a;
+  leg.knee.rotation.x=Math.max(0,Math.sin(phase+(i===0?Math.PI:0)))*.65*amplitude;
+  leg.foot.rotation.x=-leg.knee.rotation.x*.45-a*.18;
+ });
+
+ d.arms.forEach((arm,i)=>{
+  const a=i===0?opposite:swing;
+  arm.shoulder.rotation.x=a*.58;
+  arm.shoulder.rotation.z=arm.side*.08;
+  arm.elbow.rotation.x=-.25+Math.max(0,-a)*.3;
+ });
+
+ d.torso.rotation.x=Math.sin(phase*2)*.018;
+ d.torso.rotation.z=Math.sin(phase)*.018;
+ d.head.rotation.y=Math.sin(phase*.5)*.025;
+}
+
+// Animasyon döngüsü
 const clock=new THREE.Clock();
 
 function animate(){
  requestAnimationFrame(animate);
-
  const dt=Math.min(clock.getDelta(),.04);
 
  if(!paused){
   elapsed+=dt;
 
-  // KORTEJİN İLERLEMESİ
+  // Kortejin ilerlemesi
   cortege.position.z=-((elapsed*.42)%16);
 
-  // TABUTUN HAFİF TAŞINMA SALINIMI
-  coffin.position.y=Math.sin(elapsed*5.2)*.018;
+  // Tabutun kontrollü taşınma salınımı
+  coffin.position.y=Math.sin(elapsed*4.1)*.025;
+  coffin.rotation.z=Math.sin(elapsed*2.1)*.006;
 
-  // TAŞIYICILARIN YÜRÜYÜŞÜ
-  carriers.forEach(p=>{
-   const phase=elapsed*5.5+p.userData.phase;
-
-   p.userData.legs[0].rotation.x=Math.sin(phase)*.24;
-   p.userData.legs[1].rotation.x=-Math.sin(phase)*.24;
-
-   p.userData.arms.forEach(a=>{
-    a.rotation.x=Math.sin(phase)*.035;
-   });
-
-   p.position.y=Math.abs(Math.sin(phase*2))*.012;
+  carriers.forEach((p,i)=>{
+   animatePerson(p,elapsed,.85);
+   const phase=elapsed*4.1+p.userData.phase;
+   p.position.y=Math.abs(Math.sin(phase))* .018;
   });
 
-  // KALABALIĞIN YÜRÜYÜŞÜ
-  crowd.forEach(p=>{
-   const phase=elapsed*4.8+p.userData.phase;
-
-   p.userData.legs[0].rotation.x=Math.sin(phase)*.2;
-   p.userData.legs[1].rotation.x=-Math.sin(phase)*.2;
-  });
+  crowd.forEach(p=>animatePerson(p,elapsed,.65));
  }
+
+ // Kamera konumlarını sürekli hesapla ve yumuşak geçiş uygula
+ cameraSetup();
+ const smooth=1-Math.exp(-4.5*dt);
+ camera.position.lerp(desiredPosition,smooth);
+ lookTarget.lerp(desiredTarget,smooth);
+ camera.lookAt(lookTarget);
 
  renderer.render(scene,camera);
 }
 
 animate();
-
-// SAYFA BOYUTU DEĞİŞİKLİĞİ
 document.querySelector('#loading').remove();
 
 addEventListener('resize',()=>{
